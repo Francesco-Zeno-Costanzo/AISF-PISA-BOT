@@ -44,7 +44,7 @@ QUIZ = {1:{"Quanto fa 1+1?":{"si":"0", "no1":"2"}, "spiegazione":"Salvetti spieg
        10:{"In fisica delle particelle che cos'è un campo":{"no1":"una particella", "no2":"dei numeri", "no3":"non lo so", "si":"una rappresentazione irriducibile del gruppo di Poincaré"},
            "spiegazione":"Il gruppo di Poincaré è il grupppo di simmetria della relatività ristretta e gli autovalori dell'operatore  di casimir sono legati a massa (m^2) e spin s(s+1)m^2"},
        11:{"Se un mattone pesa un kilo più mezzo mattone, quanto pesa il mattone?":{"si":"2 kg", "no1":"0.5 kg", "no2":"1.5 kg", "no3":"pi greco (numero puro)"},
-           "spiegazione":"x = (1 + 1/2)x"},
+           "spiegazione":"x = 1 + x/2"},
        12:{"Quanti pianeti ci sono nell'universo?":{"no1":"Circa uno a stella", "no2":"Troppo difficile da stimare", "si":"8", "no4":"4"}, 
            "spiegazione":"I pianeti sono solo quelli che orbitano intorno al sole, quindi solo 8. Siamo molto egocentrici"},
        13:{"Attorno a cosa orbitano i pianeti del sistema solare?":{"no1":"Terra", "no2":"Sole", "no3":"te", "si":"Nessuna delle precedenti"},
