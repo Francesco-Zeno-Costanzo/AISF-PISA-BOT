@@ -39,7 +39,7 @@ QUIZ = {1:{"Quanto fa 1+1?":{"si":"0", "no1":"2"}, "spiegazione":"Salvetti spieg
            "spiegazione":"https://wiki.archlinux.org/"},
         8:{"Quale ente inventò mouse e interfaccia desktop":{"no1":"Microsoft", "no2":"Apple", "si":"Xerox", "no3":"NASA"},
            "spiegazione":"I geni della Xerox non credettero che tali invenzioni fossero utili e quindi lasciano che Apple le copiasse"},
-        9:{"Cosa porta alla nascita di GNU/Linux?":{"no1":"Per insegnare le basi degli OS", "si":"Una stampante Xerox", "no2":"La necessita di codice open source", "no3":"GNU: GNU is Not Unix"},
+        9:{"Cosa porta alla nascita di GNU/Linux?":{"no1":"Per insegnare le basi degli OS", "si":"Una stampante Xerox", "no2":"La necessità di codice open source", "no3":"GNU: GNU is Not Unix"},
            "spiegazione":"Una piegazione la potete trovare qui: https://www.youtube.com/watch?v=VT4A4efdheo&ab_channel=morrolinux"},
        10:{"In fisica delle particelle che cos'è un campo":{"no1":"una particella", "no2":"dei numeri", "no3":"non lo so", "si":"una rappresentazione irriducibile del gruppo di Poincaré"},
            "spiegazione":"Il gruppo di Poincaré è il grupppo di simmetria della relatività ristretta e gli autovalori dell'operatore  di casimir sono legati a massa (m^2) e spin s(s+1)m^2"},
@@ -50,6 +50,26 @@ QUIZ = {1:{"Quanto fa 1+1?":{"si":"0", "no1":"2"}, "spiegazione":"Salvetti spieg
        13:{"Attorno a cosa orbitano i pianeti del sistema solare?":{"no1":"Terra", "no2":"Sole", "no3":"te", "si":"Nessuna delle precedenti"},
            "spiegazione":"Giustamente dipende dal sistema di riferimento. (P.S. Sole sarebbe comunque sbagliato, bisgna considerare il baricento, che grazie a Giove a volte è fuori dal Sole)"},
        14:{"Chi ha ideato inizialmente il meccanismo di Higgs":{"no1":"Landau", "si":"Philip W. Anderson", "no2":"Peter Higgs", "no3":"Alexander Polyakov"},
-           "spiegazione":"Il primo articolo fu di Philip W. Anderson nel 1963 ma per una teoria non relativistica, l'anno dopo Higgs e altri in maniera indipendente lo generalizzarono"}
+           "spiegazione":"Il primo articolo fu di Philip W. Anderson nel 1963 ma per una teoria non relativistica, l'anno dopo Higgs e altri in maniera indipendente lo generalizzarono"},
+       15:{"Con quale sigla è più conosciuto il polivinilcloruro":{"si":"Cipolla", "no1":"pvc"},
+           "spiegazione":"Questo non è un villaggio turistico e tu non fai ridere"}
 }
 
+#========================= FRASE DA DIRE PRIMA DELLA RISPETTIVA DOMANDA =========================
+
+MSG_QUIZ = {1:"Questa è una cit, probabilmente non la saprete",
+            2:"Te ne intendi di ippica?",
+            3:"Testiamo un po' la tua cultura",
+            4:"Vuoi una domanda eh? Vediamo se questa la sai",
+            5:"Vediamo un po' di storia",
+            6:"Non me ne vengono molte, proviamo questa, ma è facile",
+            7:"Rifletti bene prima di rispondere",
+            8:"Immagina il meme di Mr Bean che copia",
+            9:"Cosa posso chiederti mhmm... proviamo questa",
+           10:"Proviamo con qualcosa di difficile",
+           11:"Dai un giochino matematico",
+           12:"Ah voi umani..., siete esagerati",
+           13:"Attenzione che sono bastardo e pignolo",
+           14:"Oh guarda un fotono a preso massa",
+           15:"Alti momenti della TV, devi saperla"
+}
