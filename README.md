@@ -3,7 +3,7 @@ Codice sorgente del bot telegram per il comitato locale di AISF Pisa
 
 ## Cosa il bot può fare attualmente
 ### Dare informazioni
-Su un foglio google (accessibile al presidente o pochi altri) sono presenti informazioni sul comitato e sugli eventi che esso organizza che lui legge e restituisce.\\
+Su un foglio google (accessibile al presidente o pochi altri) sono presenti informazioni sul comitato e sugli eventi che esso organizza che lui legge e restituisce.
 Da anche informazioni sui materiali dei corsi AISF.
 
 ### Inoltro messaggi
