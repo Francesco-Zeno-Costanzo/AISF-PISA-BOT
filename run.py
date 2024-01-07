@@ -21,3 +21,8 @@ while True:
         # Avvio il bot
         call("python3 bot.py", shell=True)
         # IL ciclo non riparte finchè il bot non viene nuovamente killato
+    
+    # Se è due il bot si deve spegnere totalmente
+    if n == 2:
+        print("Spegnimento")
+        exit()
