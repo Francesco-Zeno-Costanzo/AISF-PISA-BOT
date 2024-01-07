@@ -6,21 +6,23 @@ Le informazioni date dal comando  /info devo essere caricate sul seguente foglio
 ********************************************** ATTENZIONE **********************************************
 
 A meno di non voler modificare il codice il foglio google DEVE essere così compilato:
-________________________________________________________________________________________________________
- Carica 1           | Carica 2           | .... | Carica n           | Eventi   | Descrizione Eventi   |
---------------------|--------------------|------|--------------------|----------|----------------------|
- Infomazioni sulla  | Informazioni sulla |      | Informazioni sulla |          |                      |
- persona che occupa | persona che occupa | .... | persona che occupa | Evento 1 | Descrizione Evento 1 |
- Carica 1           | Carica 2           |      | Carica n           |          |                      |
---------------------|--------------------|------|--------------------|----------|----------------------|
-                    |                    |      |                    | Evento 2 | Descrizione Evento 2 |
---------------------|--------------------|------|--------------------|----------|----------------------|
-                    |                    |      |                    |    .     |           .          |
-                    |                    |      |                    |    .     |           .          |
-                    |                    |      |                    |    .     |           .          |
---------------------|--------------------|------|--------------------|----------|----------------------|
-                    |                    |      |                    | Evento n | Descrizione Evento n |
---------------------------------------------------------------------------------------------------------
+___________________________________________________________________________________________________________________________________
+ Carica 1           | Carica 2           | .... | Carica k           | Eventi   | Descrizione Eventi   |  Corsi  | Link Materiale |
+--------------------|--------------------|------|--------------------|----------|----------------------|---------|----------------|
+ Infomazioni sulla  | Informazioni sulla |      | Informazioni sulla |          |                      |         |                |
+ persona che occupa | persona che occupa | .... | persona che occupa | Evento 1 | Descrizione Evento 1 | Corso 1 | Link materiale |
+ Carica 1           | Carica 2           |      | Carica k           |          |                      |         |  del corso 1   |
+--------------------|--------------------|------|--------------------|----------|----------------------|---------|----------------|
+                    |                    |      |                    | Evento 2 | Descrizione Evento 2 | Corso 2 | Link materiale |
+                    |                    |      |                    |          |                      |         | del corso 2    |
+--------------------|--------------------|------|--------------------|----------|----------------------|---------|----------------|
+                    |                    |      |                    |    .     |           .          |    .    |        .       |
+                    |                    |      |                    |    .     |           .          |---------|----------------|
+                    |                    |      |                    |    .     |           .          | Corso m | Link materiale |
+                    |                    |      |                    |          |                      |         | del corso m    |
+--------------------|--------------------|------|--------------------|----------|----------------------|---------|----------------|
+                    |                    |      |                    | Evento n | Descrizione Evento n |         |                |
+-----------------------------------------------------------------------------------------------------------------------------------
 
 ########################################################################################################
 
@@ -284,19 +286,19 @@ async def corsi(update:Update, context:ContextTypes.DEFAULT_TYPE):
     Funzione per creare il comando /corsi creando i due bottoni
     '''
     
-    ep = "U0001F9EE" # emoji abaco
-    el = "U0001F4DC" # emoji pergamena
+    ep = "U0001F9EE"
+    el = "U0001F4DC"
+    em = [ep, el] # emoji prima python poi latex
     
     # Creazione dei bottoni
     # keyboard deve essere una lista di liste, se in ogni lista interna
     # c'è solo un bottone tutti i bottoni sono sono in colonna, se una
     # lista interna contiene più bottoni, essi saranno stampati affianco
-    keyboard = [
-        [
-            InlineKeyboardButton(chr(int(ep[1:], 16))+" Python", callback_data="py"),
-            InlineKeyboardButton(chr(int(el[1:], 16))+" Latex",  callback_data="tex"),
-        ]
-    ]
+    keyboard = []
+    # Bottoni eventi
+    for i, emoji in zip(range(M), em):
+        keyboard.append([InlineKeyboardButton(chr(int(emoji[1:], 16)) + " " + df["Corsi"][i], callback_data=f'{i}')])
+
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     # Messaggio del bot
@@ -309,12 +311,9 @@ async def button_c(update:Update, context:ContextTypes.DEFAULT_TYPE):
     '''
     query = update.callback_query
     await query.answer()
-    
-    corso = {"py"  : "https://github.com/Francesco-Zeno-Costanzo/4BLP",
-             "tex" : "Error 404"}
 
     # Messaggio del bot
-    await query.edit_message_text(text=f"Il materiale è disponibile qui:\n{corso[query.data]}")
+    await query.edit_message_text(text="Il materiale è disponibile qui:\n" + df['Link Materiale'][int(query.data)])
 
 #==================================================================================================
 # Quiz 
@@ -350,9 +349,11 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
     # vuole inviare un messaggio a tutti gli utenti del bot per mandare qualche avviso,
     # ad esempio magari chi mantiene il codice vuole avvisare che sarà offline per qualche tempo.
     # Se invece il meaaggio è solamente passwd_on_off il bot si spegnerà e riaccenderà
+    # Se invece il meaaggio è solamente passwd_off il bot si spegnerà.
     
     passwd_msg    = "Una password scelta da voi"
     passwd_on_off = "Un'altra password scelta da voi"
+    passwd_off    = "Insomma avete capito"
     n             = len(passwd_msg)
     inviati       = 0                      # numero di messaggi inviati
     non_inv       = 0                      # numero di messaggi non inviati
@@ -377,11 +378,21 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
         msg = f"messaggio inviato correttamente a {inviati} untenti, con {non_inv} eccezioni"
         await context.bot.send_message(chat_id=str(root), text=msg)
     
-    # Per spegnere il bot
+    # Per riavviare il bot
     elif update.message.text == passwd_on_off:
         # Scrivo su file un messaggio di spegnimento
         file_off = open(file_start, "w")
         file_off.write(f"{0} \n")
+        file_off.close()
+        
+        # uccido questo specifico processo grazie al suo id
+        call(f"kill {os.getpid()}", shell=True)
+    
+    # Per Spegnere il bot
+    elif update.message.text == passwd_off:
+        # Scrivo su file un messaggio di spegnimento
+        file_off = open(file_start, "w")
+        file_off.write(f"{2} \n")
         file_off.close()
         
         # uccido questo specifico processo grazie al suo id
