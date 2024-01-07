@@ -9,6 +9,9 @@ Da anche informazioni sui materiali dei corsi AISF.
 ### Inoltro messaggi
 Il presidente, o chi per lui, può inoltrare messaggi a tutti gli utenti per comunicare informazioni.
 
+### Riavvio
+Come per l'inoltro messaggi esiste una password per il riavvio del bot
+
 ### Quiz
 Semplici domande per divertirsi un po'.
 
