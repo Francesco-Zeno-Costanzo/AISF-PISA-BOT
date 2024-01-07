@@ -22,15 +22,30 @@ ________________________________________________________________________________
                     |                    |      |                    | Evento n | Descrizione Evento n |
 --------------------------------------------------------------------------------------------------------
 
-Inoltre è possibile da parte del presidente o da chi autorizzato inoltrare un messaggio a tutti gli utenti.
-Per farlo basta mandare un messaggio normalissimo al bot e lui lo reindirizzerà a tutti gli altri utenti di
-cui il bot conosce il chat_id (per farlo sapere al bot l'utente deve semplicemente avviare il bot).
-Il messaggio deve avere però la seguente forma e.g:
+########################################################################################################
 
-passwd
-Salve a tutti il bot rimarrà inattivo per qualche ora per manutenzione
+Se un utente invia un messaggio al bot, il bot risponderà a caso con frasi scelte da un pool in talk.py.
+Esistono però dei messaggi "con privilegi di amministratore"; ovvero messaggi che iniziano con una
+password, che il bot riconosce e permettere di compiere un certo numero di azioni:
 
-Dove passwd è una password e il testo sottostante sarà quello inoltrato.
+1) Il presidente o chi autorizzato può inoltrare un messaggio a tutti gli utenti.
+   Per farlo basta mandare un messaggio normalissimo al bot e lui lo reindirizzerà a tutti gli altri utenti di
+   cui il bot conosce il chat_id (per farlo sapere al bot l'utente deve semplicemente avviare il bot).
+   Il messaggio deve avere però la seguente forma e.g:
+
+   password_1
+   Salve a tutti il bot rimarrà inattivo per qualche ora per manutenzione
+
+   Dove password_1 è una password e il testo sottostante sarà quello inoltrato.
+
+2) Spegnere e riaccendere il bot. Per far si che il bot si accorga dei cambiamenti del google sheet è
+   necessario che il bot lo legga di nuovo. Esiste quindi una password che spegne il bot scrivendo su
+   un file. Appena il bot termina parte un secondo codice che legge il file per vedere se effettivamente
+   il bot è spento e lo riaccende. Per far funzionare tutto vanno lanciati i due codici insieme:
+   
+   ~$ python3 bot.py && python3 run.py
+
+########################################################################################################
 
 Per le risposte e il quiz vedere il file talk.py 
 """
@@ -42,6 +57,7 @@ import asyncio
 import logging
 import numpy as np
 import pandas as pd
+from subprocess import call
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, Poll
 from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes, ConversationHandler, MessageHandler, filters, PollHandler
 from talk import L, QUIZ, MSG_QUIZ
@@ -67,6 +83,8 @@ K = df.columns.get_loc("Eventi")  # Numero di cariche del comitato
 
 # File per conservare gli id di chiunque avvii il bot, in modo da mandare un messaggio a tutti gli utenti
 file_all_id = "id.txt"
+# File per sapere se il bot si è spento
+file_start  = "start.txt"
 
 # Leggo il file con tutti gli id
 all_id = np.loadtxt(file_all_id, unpack=True, dtype=int)
@@ -328,15 +346,18 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
     '''
     # update.message.text è il messaggio iviato dall'utente
 
-    # Se i primi caratteri di un messaggio sono quelli in passwd significa che chi manda il messaggio
+    # Se i primi caratteri di un messaggio sono quelli in passwd_msg significa che chi manda il messaggio
     # vuole inviare un messaggio a tutti gli utenti del bot per mandare qualche avviso,
-    # ad esempio magari chi mantiene il codice vuole avvisare che sarà offline per qualche tempo
-    passwd  = "vostra password"
-    n       = len(passwd)
-    inviati = 0                      # numero di messaggi inviati
-    non_inv = 0                      # numero di messaggi non inviati
+    # ad esempio magari chi mantiene il codice vuole avvisare che sarà offline per qualche tempo.
+    # Se invece il meaaggio è solamente passwd_on_off il bot si spegnerà e riaccenderà
     
-    if update.message.text[:n] == passwd :
+    passwd_msg    = "Una password scelta da voi"
+    passwd_on_off = "Un'altra password scelta da voi"
+    n             = len(passwd_msg)
+    inviati       = 0                      # numero di messaggi inviati
+    non_inv       = 0                      # numero di messaggi non inviati
+    
+    if update.message.text[:n] == passwd_msg:
         
         root = update.effective_chat.id # id di chi manda il messaggio
         
@@ -356,6 +377,16 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
         msg = f"messaggio inviato correttamente a {inviati} untenti, con {non_inv} eccezioni"
         await context.bot.send_message(chat_id=str(root), text=msg)
     
+    # Per spegnere il bot
+    elif update.message.text == passwd_on_off:
+        # Scrivo su file un messaggio di spegnimento
+        file_off = open(file_start, "w")
+        file_off.write(f"{0} \n")
+        file_off.close()
+        
+        # uccido questo specifico processo grazie al suo id
+        call(f"kill {os.getpid()}", shell=True)
+        
     else:
         # altrimenti rispondo a caso
         await update.message.reply_text(L[random.randint(0, len(L)-1)])
