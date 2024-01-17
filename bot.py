@@ -509,7 +509,7 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
             await context.bot.send_message(chat_id=chat_id, text=description)
         
         # Se il primo carattere corrisponde ma il resto no
-        elif update.message.text[0] == All[1] and  not update.message.text in All:
+        elif not update.message.text in All and len(All)>1:
             description = "Non trovo una corrispondenza, attento in caso a scrivere bene il codice"
             await context.bot.send_message(chat_id=chat_id, text=description)
         
