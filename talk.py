@@ -9,7 +9,7 @@ e la domanda non viene visualizzata. Il codice è case sensitive quindi rispetta
 #========================= SERIE DI RISPOSTE CASUALI, PRATICAMENTE TUTTE CIT =========================
 
 L = ["Senti fra, anche meno", "A volte dorme più lo sveglio che il dormiente", "Prego prendi pure una cadrega",
-     "Questa è una tua opinione e benchè comprovata da fatti rimane una tua opinione", "Quindi sei tu il pedofilo",
+     "Questa è una tua opinione e benchè comprovata da fatti rimane una tua opinione",
      "Non credi anche tu che ogni colore sia monocromatico a se stesso?", "Adoro l'odore del napalm al mattino",
      "Questo non creto", "Amico, te lo dico da amico, fatti li cazzi tua", "Impara a distaccarti da chi temi di perdere", 
      "Danzi mai con il diavolo nel pallido plenilunio?", "Fare o non fare, non c'è provare", "No maria io esco",

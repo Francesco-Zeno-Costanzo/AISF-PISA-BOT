@@ -359,9 +359,9 @@ async def prenotazioni(update:Update, context:ContextTypes.DEFAULT_TYPE):
     '''
     Funzione che spiega come funzionano le prenotazioni
     '''
-    description = "Vuoi prenotarti eh? Dammi la mail con cui ti sei iscritto ad AISF grazie \
-                   \nPer piacere scrivi solo la mail e attenzione agli spazi prima e dopo. \
-                   \nSe la sbagli mi indispongo e ti spondo a caso."
+    description = "Vuoi prenotarti eh? Dammi la mail con cui ti sei iscritto ad AISF, grazie. \
+                   \nPer piacere scrivi solo la mail e fai attenzione agli spazi prima e dopo. \
+                   \nSe la sbagli mi indispongo e ti risponderò a caso."
     chat_id = update.effective_chat.id
     await context.bot.send_message(chat_id=chat_id, text=description)
 
