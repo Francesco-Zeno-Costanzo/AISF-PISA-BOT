@@ -15,5 +15,8 @@ Come per l'inoltro messaggi esistono password per il riavvio o lo spegimento del
 ### Quiz
 Semplici domande per divertirsi un po'.
 
+### Prenotazioni
+Tramite un controllo per la verifica di iscrizione ad aisf è possibile prenotarsi per degli eventi. Le prenotazioni si chiudono in automatico ad esaurimento posti.
+
 ### Male parole
 Se mandate messaggi il bot risponde a caso da un pool di cit.
