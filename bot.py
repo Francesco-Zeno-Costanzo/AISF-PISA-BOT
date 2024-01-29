@@ -1,7 +1,7 @@
 """
 Codice per il bot Pluto di AISF Pisa.
 Le informazioni date dal comando  /info devo essere caricate sul seguente foglio google:
----------------------------------------------------------------------------------------
+https://docs.google.com/spreadsheets/d/17Z_r2GNDs7H1niaJTQjM2Ur3AACoRHjD4AJOF8soPjc/edit#gid=0
 
 ********************************************** ATTENZIONE **********************************************
 
@@ -55,7 +55,15 @@ password, che il bot riconosce e permettere di compiere un certo numero di azion
    numero posti disponibili
    carattere speciale
    
-   Le prenotazioni si chiuderanno da sole poi con una seconda password è possibile cancellarle.
+   Per stoppare o chiudere le prenotazioni si usa un altra password e i messagi sono del tipo:
+   
+   passwd
+   stop
+   
+   oppure:
+   
+   passwd
+   chiuso
 
 ########################################################################################################
 
@@ -79,8 +87,8 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 #**************************************************************************************************
 
 # Link del foglio google dove sono le informazioni per essere letto come csv
-GoogleSheetId = '-----'
-WorkSheetName = '-----'
+GoogleSheetId = '17Z_r2GNDs7H1niaJTQjM2Ur3AACoRHjD4AJOF8soPjc'
+WorkSheetName = 'AISFPISA'
 URL = f'https://docs.google.com/spreadsheets/d/{GoogleSheetId}/gviz/tq?tqx=out:csv&sheet={WorkSheetName}'
 
 # Leturra del file
@@ -380,13 +388,14 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
     # ad esempio magari chi mantiene il codice vuole avvisare che sarà offline per qualche tempo.
     # Se invece il meaaggio è solamente passwd_on_off il bot si spegnerà e riaccenderà.
     # Se invece il meaaggio è solamente passwd_off il bot si spegnerà.
-    # Le altre due aprono e chiudono le prenotazioni per gli eventi.
+    # Le altre due aprono e chiudono/cancellano le prenotazioni per gli eventi.
     
-    passwd_msg    = "--------------------"
-    passwd_on_off = "--------------------"
-    passwd_off    = "--------------------"
-    passwd_prenot = "--------------------"
-    passwd_nopre  = "--------------------"
+    passwd_msg    = "WCqXDptGzjqJXuc34Ti3"
+    passwd_on_off = "D2VHXzfABj4GGlAIDtmO"
+    passwd_off    = "9mDfuZL47ZDIsRu6h9aH"
+    passwd_prenot = "91h0HF3p6nwX51Q2giXe"
+    passwd_nopre  = "aG8U9QZ312gsWIcEXXD2"
+    chiusura_pre  = 0
     n             = len(passwd_msg)
     inviati       = 0                      # numero di messaggi inviati
     non_inv       = 0                      # numero di messaggi non inviati
@@ -444,13 +453,22 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
 
     # Per stoppare le prenotazioni dopo un evento, per evitare che chi si può penotrare
     # non si trovi bloccato dalle prenotazioni dell'evento precedente
-    elif update.message.text == passwd_nopre:
-        # Scrivo su file un messaggio di stop
-        with open(file_prenot, "w", encoding="utf-8") as file_p:
-            file_p.write("nope\n")
+    elif update.message.text[:n] == passwd_nopre:
 
-        msg = "Prenotazioni cancellate correttamente"
-        await context.bot.send_message(chat_id=str(root), text=msg)
+        # Calcellare le prenotazioni
+        if update.message.text[n:] == "stop":
+            # Scrivo su file un messaggio di stop
+            with open(file_prenot, "w", encoding="utf-8") as file_p:
+                file_p.write("nope\n")
+
+            msg = "Prenotazioni cancellate correttamente"
+            await context.bot.send_message(chat_id=str(root), text=msg)
+
+        # Stoppare le prenotazioni
+        if update.message.text[n:] == "chiuso":
+            chiusura_pre = 1
+            msg = "Prenotazioni chiuse correttamente"
+            await context.bot.send_message(chat_id=str(root), text=msg)
 
     # Gestione vera e propria delle prenotazioni
     elif update.message.text.lower() in mail:
@@ -468,6 +486,10 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
         # Se l'id è gia memorizzato vuol dire che ti sei già prenotato
         elif str(chat_id) in All:
             description = "Ciao caro ma ti sei già prenotato"
+            await context.bot.send_message(chat_id=chat_id, text=description)
+        
+        elif chiusura_pre == 1:
+            description = "Ciao caro ma le prenotazioni sono chiuse"
             await context.bot.send_message(chat_id=chat_id, text=description)
 
         else :
@@ -532,7 +554,7 @@ def main():
     '''
 
     # Creo il bot vero e proprio
-    application = Application.builder().token('TOKEN').build()
+    application = Application.builder().token('6580621706:AAF_UmdGMux6Sh5rKGMhwu7hVQMAYwK4vYw').build()
 
     # Creo il comando start
     application.add_handler(CommandHandler("start", start))  
