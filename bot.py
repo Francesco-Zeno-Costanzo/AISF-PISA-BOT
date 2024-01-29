@@ -395,7 +395,6 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
     passwd_off    = "--------------------"
     passwd_prenot = "--------------------"
     passwd_nopre  = "--------------------"
-    chiusura_pre  = 0
     n             = len(passwd_msg)
     inviati       = 0                      # numero di messaggi inviati
     non_inv       = 0                      # numero di messaggi non inviati
@@ -456,7 +455,7 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
     elif update.message.text[:n] == passwd_nopre:
 
         # Calcellare le prenotazioni
-        if update.message.text[n:] == "stop":
+        if update.message.text[n+1:].lower() == "cancella":
             # Scrivo su file un messaggio di stop
             with open(file_prenot, "w", encoding="utf-8") as file_p:
                 file_p.write("nope\n")
@@ -465,8 +464,11 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
             await context.bot.send_message(chat_id=str(root), text=msg)
 
         # Stoppare le prenotazioni
-        if update.message.text[n:] == "chiuso":
-            chiusura_pre = 1
+        if update.message.text[n+1:].lower() == "chiuso":
+
+            with open(file_prenot, "a", encoding="utf-8") as file_p:
+                file_p.write(f"chiuso")
+
             msg = "Prenotazioni chiuse correttamente"
             await context.bot.send_message(chat_id=str(root), text=msg)
 
@@ -488,7 +490,7 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
             description = "Ciao caro ma ti sei già prenotato"
             await context.bot.send_message(chat_id=chat_id, text=description)
         
-        elif chiusura_pre == 1:
+        elif All[-1] == "chiuso":
             description = "Ciao caro ma le prenotazioni sono chiuse"
             await context.bot.send_message(chat_id=chat_id, text=description)
 
