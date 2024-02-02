@@ -482,16 +482,16 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
 
         # Se sul file ci sta scritto "nope" non è ancora possibile prenotarsi
         if All[0] == "nope":
-            description = "Ciao caro mi spiace ma non è ancora possibile prenotarsi"
+            description = "Ciao teso mi spiace ma non è ancora possibile prenotarsi"
             await context.bot.send_message(chat_id=chat_id, text=description)
         
         # Se l'id è gia memorizzato vuol dire che ti sei già prenotato
         elif str(chat_id) in All:
-            description = "Ciao caro ma ti sei già prenotato"
+            description = "Ciao teso ma ti sei già prenotato"
             await context.bot.send_message(chat_id=chat_id, text=description)
         
         elif All[-1] == "chiuso":
-            description = "Ciao caro ma le prenotazioni sono chiuse"
+            description = "Ciao teso ma le prenotazioni sono chiuse"
             await context.bot.send_message(chat_id=chat_id, text=description)
 
         else :
@@ -502,7 +502,7 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
 
             # Se il numero è arrivato al massimo le iscrizioni si chiudono
             if NO//2 == NP:
-                description = "Ciao caro mi spiace ma non è più possibile prenotarsi"
+                description = "Ciao teso mi spiace ma non è più possibile prenotarsi"
                 await context.bot.send_message(chat_id=chat_id, text=description)
 
             # Creazione del codice di prenotazione
@@ -515,7 +515,7 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
                 with open(file_prenot, "a", encoding="utf-8") as file_p:
                     file_p.write(f"{SC}{tmp}\n{chat_id}\n")
 
-                description = f"Ciao caro ecco il tuo codice di prenotazione: {SC}{tmp} \
+                description = f"Ciao teso ecco il tuo codice di prenotazione: {SC}{tmp} \
                                 \nmi raccomando non dirlo a nessunno potresti incorrere nell'ira di Achille."
                 await context.bot.send_message(chat_id=chat_id, text=description)
     
