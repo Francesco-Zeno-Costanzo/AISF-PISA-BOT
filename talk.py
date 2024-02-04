@@ -11,14 +11,15 @@ e la domanda non viene visualizzata. Il codice è case sensitive quindi rispetta
 L = ["Senti fra, anche meno", "A volte dorme più lo sveglio che il dormiente", "Prego prendi pure una cadrega",
      "Questa è una tua opinione e benchè comprovata da fatti rimane una tua opinione",
      "Non credi anche tu che ogni colore sia monocromatico a se stesso?", "Adoro l'odore del napalm al mattino",
-     "Questo non creto", "Amico, te lo dico da amico, fatti li cazzi tua", "Impara a distaccarti da chi temi di perdere", 
+     "Questo non creto", "Amico, te lo dico da amico, fatti li cazzi tua", "Impara a distaccarti da chi temi di perdere",
      "Danzi mai con il diavolo nel pallido plenilunio?", "Fare o non fare, non c'è provare", "No maria io esco",
      "La paura è la via per il Lato Oscuro. \nLa paura conduce all'ira, l'ira all'odio, l'odio conduce alla sofferenza. \nAh... Io sento in te molta paura",
      "Tu l'amore preferisci farlo sopra o sotto Trieste?", "Recuperati monster", "Sei in pari con One Piece?", "Te lo sei visto Pluto?",
      "Chi siete? cosa portate? Ma quanti siete? Un fiorino!", "Mio figlio poteva morire", "Potevo rimanere offeso",
      "E questo balletto racchiude in sè, diciamo tutti i quesiti che l'uomo si è fatto... \nC'è Dio? E se c'è, dov'è? E se dov'è, chi è? E se chi è, perchè? ... Eh?",
      "Nescio Rick mi videtur falso", "Queste rocce sono rocce", "Turnica e vieni giù ..., turnica e vieni giù ..., girati \nE DÌ GIRATI",
-     "Mi hai fatto ridere ora torna nel gulag", "Perchè è questo che fano gli eroi", "The show must Honkong", "Piuttosto che perdere tempo a scrivere usa i comandi"
+     "Mi hai fatto ridere ora torna nel gulag", "Perchè è questo che fano gli eroi", "The show must Honkong", "Piuttosto che perdere tempo a scrivere usa i comandi",
+     "Senti mai quell'istinto mascolino di recitare poesie davanti alla corte d'assise?"
 ]
 
 #========================= DOMANDE PER IL QUIZ =========================
@@ -45,14 +46,26 @@ QUIZ = {1:{"Quanto fa 1+1?":{"si":"0", "no1":"2"}, "spiegazione":"Salvetti spieg
            "spiegazione":"Il gruppo di Poincaré è il grupppo di simmetria della relatività ristretta e gli autovalori dell'operatore  di casimir sono legati a massa (m^2) e spin s(s+1)m^2"},
        11:{"Se un mattone pesa un kilo più mezzo mattone, quanto pesa il mattone?":{"si":"2 kg", "no1":"0.5 kg", "no2":"1.5 kg", "no3":"pi greco (numero puro)"},
            "spiegazione":"x = 1 + x/2"},
-       12:{"Quanti pianeti ci sono nell'universo?":{"no1":"Circa uno a stella", "no2":"Troppo difficile da stimare", "si":"8", "no4":"4"}, 
+       12:{"Quanti pianeti ci sono nell'universo?":{"no1":"Circa uno a stella", "no2":"Troppo difficile da stimare", "si":"8", "no4":"4"},
            "spiegazione":"I pianeti sono solo quelli che orbitano intorno al sole, quindi solo 8. Siamo molto egocentrici"},
        13:{"Attorno a cosa orbitano i pianeti del sistema solare?":{"no1":"Terra", "no2":"Sole", "no3":"te", "si":"Nessuna delle precedenti"},
            "spiegazione":"Giustamente dipende dal sistema di riferimento. (P.S. Sole sarebbe comunque sbagliato, bisgna considerare il baricento, che grazie a Giove a volte è fuori dal Sole)"},
        14:{"Chi ha ideato inizialmente il meccanismo di Higgs":{"no1":"Landau", "si":"Philip W. Anderson", "no2":"Peter Higgs", "no3":"Alexander Polyakov"},
            "spiegazione":"Il primo articolo fu di Philip W. Anderson nel 1963 ma per una teoria non relativistica, l'anno dopo Higgs e altri in maniera indipendente lo generalizzarono"},
        15:{"Con quale sigla è più conosciuto il polivinilcloruro":{"si":"Cipolla", "no1":"pvc"},
-           "spiegazione":"Questo non è un villaggio turistico e tu non fai ridere"}
+           "spiegazione":"Questo non è un villaggio turistico e tu non fai ridere"},
+       16:{"Cosa si intende con il termine cadrega":{"si":"Una sedia", "no1":"una mela", "no2":"delle posate", "no3":"la padania"},
+           "spiegazione":"https://www.youtube.com/watch?v=SHEgE6cX4Vo"},
+       17:{"Di che canzone si tratta?":{"no1":"Quale canzone?", "no2":"Non ho capito la domanda", "no3":"In che senso?", "si":"Dardue sandstorm"},
+           "spiegazione":"Esiste sempre almeno un commento che alla risposta a tale domanda recita:Dardue sandstorm"},
+       18:{"Chi è il dio cieco che gorgoglia e bestemmia al centro dell'Universo?":{"no1":"Cthulhu", "no2":"Andreotti", "si":"Azathoth", "no3":"Nyarlathotep"},
+           "spiegazione":"Creatura creata da H.P. Lovecraft, signore di tutte le cose, demone sultano, il più antico e potente dgeli dei esterni"},
+       19:{"Chi creo la bilancia con cui Anubi giudica i defunti?":{"no1":"Ra", "si":"Thot", "no2":"Anubi", "no3":"Osiride"},
+           "spiegazione":"Thot, dio della luna, scriba di Ra, dio della conoscenza e delle scienze, per non avere problemi fecero costruire la bilancia la più capace, per un processo equo"},
+       20:{"Giove stesso lo teme, treman di lui gli dei, orrore ne hanno i fiumi d'averno e i regni bui. Parliamo di:":{"si":"cupido", "no1":"Ade", "no2":"Crono", "no3":"Moire"},
+           "spiegazione":"Sono le parole con cui l'oracolo parla di cupido (Amore) al padre di Psiche"},
+       21:{"Chi è che: in mezzo a un fiume impetuoso bevendo patisce la sete?":{"si":"Un/una innamorato/a", "no1":"Un/una viandante", "no2":"I poeti", "no3":"Sisifo"},
+           "spiegazione":"Andate a leggere: De rerum natura, IV, vv.1017-1103"}
 }
 
 #========================= FRASE DA DIRE PRIMA DELLA RISPETTIVA DOMANDA =========================
@@ -71,5 +84,11 @@ MSG_QUIZ = {1:"Questa è una cit, probabilmente non la saprete",
            12:"Ah voi umani..., siete esagerati",
            13:"Attenzione che sono bastardo e pignolo",
            14:"Oh guarda un fotono a preso massa",
-           15:"Alti momenti della TV, devi saperla"
+           15:"Alti momenti della TV, devi saperla",
+           16:"Prendi pure una cadrega..."
+           17:"Spero che abbiate vissuto questi momenti",
+           18:"Non è morto ciò che in eterno può attendere, e con il volgere di strani eoni anche la morte può morire",
+           19:"Sei mai stato nella sala delle due Verità?",
+           20:"Sapevate che Cratos è figlio della ninfa Stige?",
+           21:"Un po' di letteratura fa sempre bene"
 }
