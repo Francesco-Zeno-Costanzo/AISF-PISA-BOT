@@ -85,7 +85,7 @@ MSG_QUIZ = {1:"Questa è una cit, probabilmente non la saprete",
            13:"Attenzione che sono bastardo e pignolo",
            14:"Oh guarda un fotono a preso massa",
            15:"Alti momenti della TV, devi saperla",
-           16:"Prendi pure una cadrega..."
+           16:"Prendi pure una cadrega...",
            17:"Spero che abbiate vissuto questi momenti",
            18:"Non è morto ciò che in eterno può attendere, e con il volgere di strani eoni anche la morte può morire",
            19:"Sei mai stato nella sala delle due Verità?",
