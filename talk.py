@@ -19,7 +19,8 @@ L = ["Senti fra, anche meno", "A volte dorme più lo sveglio che il dormiente", 
      "E questo balletto racchiude in sè, diciamo tutti i quesiti che l'uomo si è fatto... \nC'è Dio? E se c'è, dov'è? E se dov'è, chi è? E se chi è, perchè? ... Eh?",
      "Nescio Rick mi videtur falso", "Queste rocce sono rocce", "Turnica e vieni giù ..., turnica e vieni giù ..., girati \nE DÌ GIRATI",
      "Mi hai fatto ridere ora torna nel gulag", "Perchè è questo che fano gli eroi", "The show must Honkong", "Piuttosto che perdere tempo a scrivere usa i comandi",
-     "Senti mai quell'istinto mascolino di recitare poesie davanti alla corte d'assise?"
+     "Senti mai quell'istinto mascolino di recitare poesie davanti alla corte d'assise?", "Quando ti laurei?", "Lui mi ha detto deh e allora io boia deh, capito?",
+     "Lunga vita e prosperità", "Sarebbe bello vivere una favola", "Tu devi essere quello intelligente", "Forse siamo in ritardo, oggi è il 34 dicembre e il primo dell'anno non è ancora arrivato"
 ]
 
 #========================= DOMANDE PER IL QUIZ =========================
@@ -65,7 +66,9 @@ QUIZ = {1:{"Quanto fa 1+1?":{"si":"0", "no1":"2"}, "spiegazione":"Salvetti spieg
        20:{"Giove stesso lo teme, treman di lui gli dei, orrore ne hanno i fiumi d'averno e i regni bui. Parliamo di:":{"si":"cupido", "no1":"Ade", "no2":"Crono", "no3":"Moire"},
            "spiegazione":"Sono le parole con cui l'oracolo parla di cupido (Amore) al padre di Psiche"},
        21:{"Chi è che: in mezzo a un fiume impetuoso bevendo patisce la sete?":{"si":"Un/una innamorato/a", "no1":"Un/una viandante", "no2":"I poeti", "no3":"Sisifo"},
-           "spiegazione":"Andate a leggere: De rerum natura, IV, vv.1017-1103"}
+           "spiegazione":"Andate a leggere: De rerum natura, IV, vv.1017-1103"},
+       22:{"Come fanno i girasoli a seguire il sole?":{"no1":"Dei nani li spostano", "no2":"Non lo fanno", "si":"Grazie agli ormoni", "no3":"Con il vento"},
+           "spiegazione":"https://www.science.org/doi/10.1126/science.aaf9793"}
 }
 
 #========================= FRASE DA DIRE PRIMA DELLA RISPETTIVA DOMANDA =========================
@@ -90,5 +93,6 @@ MSG_QUIZ = {1:"Questa è una cit, probabilmente non la saprete",
            18:"Non è morto ciò che in eterno può attendere, e con il volgere di strani eoni anche la morte può morire",
            19:"Sei mai stato nella sala delle due Verità?",
            20:"Sapevate che Cratos è figlio della ninfa Stige?",
-           21:"Un po' di letteratura fa sempre bene"
+           21:"Un po' di letteratura fa sempre bene",
+           22:"Vediamo se hai il pollice verde"
 }

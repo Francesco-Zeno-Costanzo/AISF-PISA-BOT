@@ -1,7 +1,6 @@
 """
 Codice per il bot Pluto di AISF Pisa.
-Le informazioni date dal comando  /info devo essere caricate sul seguente foglio google:
-----------------------------------------------------------------------------------------
+Le informazioni date dal comando  /info devo essere caricate su un foglio google:
 
 ********************************************** ATTENZIONE **********************************************
 
@@ -70,7 +69,6 @@ password, che il bot riconosce e permettere di compiere un certo numero di azion
 Per le risposte e il quiz vedere il file talk.py 
 """
 
-
 import os
 import random
 import logging
@@ -79,7 +77,10 @@ import pandas as pd
 from subprocess import call
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, Poll
 from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes, ConversationHandler, MessageHandler, filters
+
+import secret
 from talk import L, QUIZ, MSG_QUIZ
+
 
 # Per verificare tutto vada bene
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -87,8 +88,8 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 #**************************************************************************************************
 
 # Link del foglio google dove sono le informazioni per essere letto come csv
-GoogleSheetId = '----------------'
-WorkSheetName = '----------'
+GoogleSheetId = secret.GoogleSheetId
+WorkSheetName = secret.WorkSheetName
 URL = f'https://docs.google.com/spreadsheets/d/{GoogleSheetId}/gviz/tq?tqx=out:csv&sheet={WorkSheetName}'
 
 # Leturra del file
@@ -390,16 +391,18 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
     # Se invece il meaaggio è solamente passwd_off il bot si spegnerà.
     # Le altre due aprono e chiudono/cancellano le prenotazioni per gli eventi.
     
-    passwd_msg    = "--------------------"
-    passwd_on_off = "--------------------"
-    passwd_off    = "--------------------"
-    passwd_prenot = "--------------------"
-    passwd_nopre  = "--------------------"
+    passwd_msg    = secret.passwd_msg
+    passwd_on_off = secret.passwd_on_off
+    passwd_off    = secret.passwd_off
+    passwd_prenot = secret.passwd_prenot
+    passwd_nopre  = secret.passwd_nopre
     n             = len(passwd_msg)
     inviati       = 0                      # numero di messaggi inviati
     non_inv       = 0                      # numero di messaggi non inviati
 
     root = update.effective_chat.id # id di chi manda il messaggio
+
+    #######################################################################################################
 
     if update.message.text[:n] == passwd_msg:
 
@@ -419,6 +422,8 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
         msg = f"messaggio inviato correttamente a {inviati} untenti, con {non_inv} eccezioni"
         await context.bot.send_message(chat_id=str(root), text=msg)
 
+    #######################################################################################################
+
     # Per riavviare il bot
     elif update.message.text == passwd_on_off:
         # Scrivo su file un messaggio di spegnimento
@@ -428,6 +433,8 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
         # uccido questo specifico processo grazie al suo id
         call(f"kill {os.getpid()}", shell=True)
 
+    #######################################################################################################
+
     # Per Spegnere il bot
     elif update.message.text == passwd_off:
         # Scrivo su file un messaggio di spegnimento
@@ -436,6 +443,8 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
 
         # uccido questo specifico processo grazie al suo id
         call(f"kill {os.getpid()}", shell=True)
+
+    #######################################################################################################
 
     # Per creare i codici che aprono le prenotazioni
     elif update.message.text[:n] == passwd_prenot:
@@ -449,6 +458,8 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
 
         msg = "Prenotazioni aperte correttamente"
         await context.bot.send_message(chat_id=str(root), text=msg)
+
+    #######################################################################################################
 
     # Per stoppare le prenotazioni dopo un evento, per evitare che chi si può penotrare
     # non si trovi bloccato dalle prenotazioni dell'evento precedente
@@ -471,6 +482,8 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
 
             msg = "Prenotazioni chiuse correttamente"
             await context.bot.send_message(chat_id=str(root), text=msg)
+
+    #######################################################################################################
 
     # Gestione vera e propria delle prenotazioni
     elif update.message.text.lower() in mail:
@@ -518,7 +531,9 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
                 description = f"Ciao teso ecco il tuo codice di prenotazione: {SC}{tmp} \
                                 \nmi raccomando non dirlo a nessunno potresti incorrere nell'ira di Achille."
                 await context.bot.send_message(chat_id=chat_id, text=description)
-    
+
+    #######################################################################################################
+
     # Se il messaggio è lungo 4 potrebbe essere un codice di prenotazione
     elif len(update.message.text) == 4:
         
@@ -541,7 +556,9 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
         else :
             # rispondo a caso
             await update.message.reply_text(L[random.randint(0, len(L)-1)])
-    
+
+    #######################################################################################################
+
     else:
         # altrimenti rispondo a caso
         await update.message.reply_text(L[random.randint(0, len(L)-1)])
@@ -556,7 +573,7 @@ def main():
     '''
 
     # Creo il bot vero e proprio
-    application = Application.builder().token('TOKEN').build()
+    application = Application.builder().token(secret.TOKEN).build()
 
     # Creo il comando start
     application.add_handler(CommandHandler("start", start))  
