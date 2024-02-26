@@ -102,14 +102,16 @@ M = len(df["Corsi"])              # Numero di corsi nella colonna corsi
 
 #**************************************************************************************************
 
+absolut_Path = secret.Path
+
 # File per conservare gli id di chiunque avvii il bot, in modo da mandare un messaggio a tutti gli utenti
-file_all_id = "id.txt"
+file_all_id = absolut_Path + "id.txt"
 # File per sapere se il bot si è spento
-file_start  = "start.txt"
+file_start  = absolut_Path + "start.txt"
 # File per le prenotazioni agli eventi
-file_prenot = "prenotazioni.txt"
+file_prenot = absolut_Path + "prenotazioni.txt"
 # File con le mail
-file_mail   = "mail.txt"
+file_mail   = absolut_Path + "mail.txt"
 with open(file_mail, "r", encoding="utf-8") as file_mail:
     mail = file_mail.read().split()
 
