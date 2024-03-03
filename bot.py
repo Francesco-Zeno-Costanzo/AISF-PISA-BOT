@@ -370,9 +370,18 @@ async def prenotazioni(update:Update, context:ContextTypes.DEFAULT_TYPE):
     '''
     Funzione che spiega come funzionano le prenotazioni
     '''
+
+    with open(file_prenot, "r", encoding="utf-8") as file_p:
+        All = file_p.read().split()
+
+    NP = int(All[0])          # numero posti totali
+    NO = (len(All) - 2) // 2  # numero posti prenotati
+
     description = "Vuoi prenotarti eh? Dammi la mail con cui ti sei iscritto ad AISF, grazie. \
                    \nPer piacere scrivi solo la mail e fai attenzione agli spazi prima e dopo. \
-                   \nSe la sbagli mi indispongo e ti risponderò a caso."
+                   \nSe la sbagli mi indispongo e ti risponderò a caso. \
+                   \nDi {NP} posti totali ne rimangono {NO} disponibili"
+
     chat_id = update.effective_chat.id
     await context.bot.send_message(chat_id=chat_id, text=description)
 
@@ -511,12 +520,12 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
 
         else :
 
-            NP  = int(All[0])     # numero posti totali
-            SC  = All[1]          # carattere speciale
-            NO  = len(All) - 2    # numero posti prenotati
+            NP  = int(All[0])          # numero posti totali
+            SC  = All[1]               # carattere speciale
+            NO  = (len(All) - 2) // 2  # numero posti prenotati
 
             # Se il numero è arrivato al massimo le iscrizioni si chiudono
-            if NO//2 == NP:
+            if NO == NP:
                 description = "Ciao teso mi spiace ma non è più possibile prenotarsi"
                 await context.bot.send_message(chat_id=chat_id, text=description)
 
