@@ -377,7 +377,7 @@ async def prenotazioni(update:Update, context:ContextTypes.DEFAULT_TYPE):
     NP = int(All[0])          # numero posti totali
     NO = (len(All) - 2) // 2  # numero posti prenotati
 
-    description = "Vuoi prenotarti eh? Dammi la mail con cui ti sei iscritto ad AISF, grazie. \
+    description = f"Vuoi prenotarti eh? Dammi la mail con cui ti sei iscritto ad AISF, grazie. \
                    \nPer piacere scrivi solo la mail e fai attenzione agli spazi prima e dopo. \
                    \nSe la sbagli mi indispongo e ti risponderò a caso. \
                    \nDi {NP} posti totali ne rimangono {NO} disponibili"
