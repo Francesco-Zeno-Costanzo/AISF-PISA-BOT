@@ -64,6 +64,10 @@ password, che il bot riconosce e permettere di compiere un certo numero di azion
    passwd
    chiuso
 
+4) In caso sia il google sheet contenete le mail a cambiare (aggiunta o rimozione di mail), bisogna
+   anche sta volta riavviare il bot facendo però partire il codice che calcola gli hash delle mail
+   aggiornate. Questo si fa con un signolo messaggio contenete unicamente la password assocciata.
+
 ########################################################################################################
 
 Per le risposte e il quiz vedere il file talk.py 
@@ -71,6 +75,7 @@ Per le risposte e il quiz vedere il file talk.py
 
 import os
 import random
+import hashlib
 import logging
 import numpy as np
 import pandas as pd
@@ -86,10 +91,14 @@ from talk import L, QUIZ, MSG_QUIZ
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 #**************************************************************************************************
+# Funzione per calcolare il secure hash della mail
+SHA = lambda m: hashlib.sha256(m.encode('utf-8')).hexdigest()
+
+#**************************************************************************************************
 
 # Link del foglio google dove sono le informazioni per essere letto come csv
-GoogleSheetId = secret.GoogleSheetId
-WorkSheetName = secret.WorkSheetName
+GoogleSheetId = secret.GoogleSheetId_info
+WorkSheetName = secret.WorkSheetName_info
 URL = f'https://docs.google.com/spreadsheets/d/{GoogleSheetId}/gviz/tq?tqx=out:csv&sheet={WorkSheetName}'
 
 # Leturra del file
@@ -401,12 +410,15 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
     # Se invece il meaaggio è solamente passwd_on_off il bot si spegnerà e riaccenderà.
     # Se invece il meaaggio è solamente passwd_off il bot si spegnerà.
     # Le altre due aprono e chiudono/cancellano le prenotazioni per gli eventi.
+    # Se invece si usa passwd_update il codice che calcola l'hash di tutte le mail viene chiamato e il bot riavviato'
     
     passwd_msg    = secret.passwd_msg
     passwd_on_off = secret.passwd_on_off
     passwd_off    = secret.passwd_off
     passwd_prenot = secret.passwd_prenot
     passwd_nopre  = secret.passwd_nopre
+    passwd_update = secret.passwd_update
+
     n             = len(passwd_msg)
     inviati       = 0                      # numero di messaggi inviati
     non_inv       = 0                      # numero di messaggi non inviati
@@ -489,15 +501,29 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
         if update.message.text[n+1:].lower() == "chiuso":
 
             with open(file_prenot, "a", encoding="utf-8") as file_p:
-                file_p.write(f"chiuso")
+                file_p.write("chiuso")
 
             msg = "Prenotazioni chiuse correttamente"
             await context.bot.send_message(chat_id=str(root), text=msg)
 
     #######################################################################################################
 
+    # Bisogna fornire al bot le nuove mail, cioè i nuovi hash
+    elif update.message.text[:n] == passwd_update:
+        # Aggiungo le hash nuove al file
+        call("python3 SHA.py", shell=True)
+
+        # Poi devo riavviare il bot
+        with open(file_start, "w", encoding="utf-8") as file_off:
+            file_off.write(f"{0} \n")
+
+        # uccido questo specifico processo grazie al suo id
+        call(f"kill {os.getpid()}", shell=True)
+
+    #######################################################################################################
+
     # Gestione vera e propria delle prenotazioni
-    elif update.message.text.lower() in mail:
+    elif SHA(update.message.text.lower()) in mail:
         # Apro il file per controllare che si possa ancora prenotare
         with open(file_prenot, "r", encoding="utf-8") as file_p:
             All = file_p.read().split()
@@ -526,7 +552,7 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
 
             # Se il numero è arrivato al massimo le iscrizioni si chiudono
             if NO == NP:
-                description = "Ciao teso mi spiace ma non è più possibile prenotarsi"
+                description = "Ciao teso mi spiace ma non è più possibile prenotarsi. I posti sono esauriti"
                 await context.bot.send_message(chat_id=chat_id, text=description)
 
             # Creazione del codice di prenotazione
