@@ -383,13 +383,17 @@ async def prenotazioni(update:Update, context:ContextTypes.DEFAULT_TYPE):
     with open(file_prenot, "r", encoding="utf-8") as file_p:
         All = file_p.read().split()
 
-    NP = int(All[0])          # numero posti totali
-    NO = (len(All) - 2) // 2  # numero posti prenotati
+    if All[0] == "nope":
+        info = "Attualmente comunque non ci sono eventi per cui preonotarsi"
+    else :
+        NP = int(All[0])          # numero posti totali
+        NO = (len(All) - 2) // 2  # numero posti prenotati
+        info = f"Di {NP} posti totali ne rimangono {int(NP-NO)} disponibili"
 
     description = f"Vuoi prenotarti eh? Dammi la mail con cui ti sei iscritto ad AISF, grazie. \
                    \nPer piacere scrivi solo la mail e fai attenzione agli spazi prima e dopo. \
                    \nSe la sbagli mi indispongo e ti risponderò a caso. \
-                   \nDi {NP} posti totali ne rimangono {int(NP-NO)} disponibili"
+                   \n{info}"
 
     chat_id = update.effective_chat.id
     await context.bot.send_message(chat_id=chat_id, text=description)
