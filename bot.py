@@ -73,16 +73,23 @@ password, che il bot riconosce e permettere di compiere un certo numero di azion
 Per le risposte e il quiz vedere il file talk.py 
 """
 
+# stdlib
 import os
-import random
+import re
 import hashlib
 import logging
+import datetime
+from subprocess import call
+
+# pacchetti
+import random
 import numpy as np
 import pandas as pd
-from subprocess import call
+import wikipediaapi
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, Poll
 from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes, ConversationHandler, MessageHandler, filters
 
+# nostri codici
 import secret
 from talk import L, QUIZ, MSG_QUIZ
 
@@ -399,6 +406,105 @@ async def prenotazioni(update:Update, context:ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=chat_id, text=description)
 
 #==================================================================================================
+# Eventi storici a caso da wikipedia
+#==================================================================================================
+
+async def eventi_storici(update:Update, context:ContextTypes.DEFAULT_TYPE):
+    '''
+    Funzione che restituisce un evento storico avvenuto nello stesso giorno
+    '''
+
+    def read_page(date):
+        '''
+        Funzione per leggere una pagina di wikipedia
+
+        Parameter
+        ---------
+        date : string
+            titolo della pagina, per i nostri scopi sarà una data
+
+        Return
+        ------
+        string
+            contenuto della pagina
+        '''
+        wiki = wikipediaapi.Wikipedia(
+            user_agent='https://meta.wikimedia.org/wiki/User-Agent_policy',
+            language='it')
+        page = wiki.page(date)
+
+        if page.exists():
+            # Controlla se la pagina esiste
+            return page.text
+
+        else:
+            return "Nessuna pagina trovata"
+
+
+    def parse_wikipedia_page(wikipedia_text):
+        '''
+        Funzione per riorganizzare il testo di wikipedia
+        in modo da selezionare un solo evento
+
+        Parameter
+        ---------
+        wikipedia_text : string
+            contenuto della pagina di wikipedia
+
+        Return
+        ------
+        events : list
+            lista degli eventi
+        '''
+
+        # Pattern per estrarre eventi, nati, morti e feste e ricorrenze,
+        # a noi interessano solo gli eventi ma per generalità si fa così
+
+        event_pattern       = r'Eventi\n(.*?)\n\nNati'
+        #born_pattern        = r'Nati\n(.*?)\n\nMorti'
+        #death_pattern       = r'Morti\n(.*?)\n\nFeste e ricorrenze'
+        #celebration_pattern = r'Feste e ricorrenze\n(.*?)\n\nNote'
+
+        # Voglio tutto quello tra Eventi e Nati,
+        # poi tutto quello tra Nati e Morti, et cetera
+
+        # Estraggo e riodino le informazioni
+        events       = re.findall(event_pattern,       wikipedia_text, re.DOTALL)[0].strip().split('\n')
+        #born         = re.findall(born_pattern,        wikipedia_text, re.DOTALL)[0].strip().split('\n')
+        #deaths       = re.findall(death_pattern,       wikipedia_text, re.DOTALL)[0].strip().split('\n')
+        #celebrations = re.findall(celebration_pattern, wikipedia_text, re.DOTALL)[0].strip().split('\n')
+
+
+        return events
+
+    months = {1:'gennaio', 2:'febbraio', 3:'marzo', 4:'aprile',
+              5:'maggio', 6:'giugno', 7:'luglio', 8:'agosto',
+              9:'settembre', 10:'ottobre', 11:'novembre', 12:'dicembre'}
+
+    date = datetime.date.today().strftime("%d/%m/%y")
+    mth  = int(date[3:5])
+    day  = int(date[0:2])
+
+    chat_id = update.effective_chat.id
+    description = "Vuoi sapere cosa è successo in passato come oggi?\
+                 \nFammi controllare nella mia libreria..."
+    await context.bot.send_message(chat_id=chat_id, text=description)
+
+    event_info = read_page(f'{day}_{months[mth]}')
+
+    if event_info == "Nessuna pagina trovata":
+
+        description = "Non trovo niente, sembra sia stata una gionata tranquilla"
+        await context.bot.send_message(chat_id=chat_id, text=description)
+
+    else:
+
+        parsed_data = parse_wikipedia_page(event_info)
+
+        description = f"Ooh... ecco qua: {parsed_data[L[random.randint(0, len(parsed_data)-1)]]}"
+        await context.bot.send_message(chat_id=chat_id, text=description)
+
+#==================================================================================================
 # Risposte a caso a chi manda messaggi
 #==================================================================================================
 
@@ -653,8 +759,11 @@ def main():
     # Per le risposte ai messaggi o per l'inoltro
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 
-    # Creo il comando start
+    # Creo il comando per le prenotazioni
     application.add_handler(CommandHandler("prenotami", prenotazioni))
+
+    # Creo il comando per le ricorrenze storiche
+    application.add_handler(CommandHandler("eventi_storici", eventi_storici))
 
     # Eseguo il bot
     application.run_polling(allowed_updates=Update.ALL_TYPES)
