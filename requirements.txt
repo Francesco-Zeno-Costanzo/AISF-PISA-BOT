@@ -1,5 +1,4 @@
 numpy
 pandas
-random
 wikipedia-api
 python-telegram-bot
