@@ -486,9 +486,6 @@ async def eventi_storici(update:Update, context:ContextTypes.DEFAULT_TYPE):
     day  = int(date[0:2])
 
     chat_id = update.effective_chat.id
-    description = "Vuoi sapere cosa è successo in passato come oggi?\
-                 \nFammi controllare nella mia libreria..."
-    await context.bot.send_message(chat_id=chat_id, text=description)
 
     event_info = read_page(f'{day}_{months[mth]}')
 
