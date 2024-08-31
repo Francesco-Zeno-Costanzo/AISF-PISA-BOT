@@ -498,7 +498,7 @@ async def eventi_storici(update:Update, context:ContextTypes.DEFAULT_TYPE):
 
         parsed_data = parse_wikipedia_page(event_info)
 
-        description = f"Ooh... ecco qua: {parsed_data[L[random.randint(0, len(parsed_data)-1)]]}"
+        description = f"Ooh... ecco qua: {parsed_data[random.randint(0, len(parsed_data)-1)]}"
         await context.bot.send_message(chat_id=chat_id, text=description)
 
 #==================================================================================================
