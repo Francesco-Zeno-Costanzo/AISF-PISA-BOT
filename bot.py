@@ -527,8 +527,8 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
     passwd_update = secret.passwd_update
 
     n             = len(passwd_msg)
-    inviati       = 0                      # numero di messaggi inviati
-    non_inv       = 0                      # numero di messaggi non inviati
+    inviati       = 0               # numero di messaggi inviati
+    non_inv       = 0               # numero di messaggi non inviati
 
     root = update.effective_chat.id # id di chi manda il messaggio
 
@@ -617,8 +617,19 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
 
     # Bisogna fornire al bot le nuove mail, cioè i nuovi hash
     elif update.message.text[:n] == passwd_update:
+
+        old_n_mail = len(mail) # numero attuale di mail
+
         # Aggiungo le hash nuove al file
         call("python3 /home/BOT/AISF-PISA-BOT/SHA.py", shell=True)
+
+        with open(file_mail, "r", encoding="utf-8") as file_mail:
+            mail_N = file_mail.read().split()
+        
+            new_n_mail = len(mail_N)
+
+            msg = f"Prima il numero di mail era {old_n_mail}, adesso è {new_n_mail}"
+            await context.bot.send_message(chat_id=str(root), text=msg)
 
         # Poi devo riavviare il bot
         with open(file_start, "w", encoding="utf-8") as file_off:
