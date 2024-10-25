@@ -127,7 +127,7 @@ file_start  = absolut_Path + "start.txt"
 # File per le prenotazioni agli eventi
 file_prenot = absolut_Path + "prenotazioni.txt"
 # File con le mail
-file_mail   = absolut_Path + "mail.txt"
+file_mail   = secret.Path + "mail.txt"
 with open(file_mail, "r", encoding="utf-8") as file_mail:
     mail = file_mail.read().split()
 
@@ -525,6 +525,7 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
     passwd_prenot = secret.passwd_prenot
     passwd_nopre  = secret.passwd_nopre
     passwd_update = secret.passwd_update
+    file_mail     = secret.Path + "mail.txt"
 
     n             = len(passwd_msg)
     inviati       = 0               # numero di messaggi inviati
