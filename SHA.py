@@ -9,6 +9,7 @@ import secret
 
 # Link del foglio google dove sono le informazioni per essere letto come csv
 GoogleSheetId = secret.GoogleSheetId_mail
+absolut_Path = secret.Path
 WorkSheetName = secret.WorkSheetName_mail
 URL = f'https://docs.google.com/spreadsheets/d/{GoogleSheetId}/gviz/tq?tqx=out:csv&sheet={WorkSheetName}'
 
