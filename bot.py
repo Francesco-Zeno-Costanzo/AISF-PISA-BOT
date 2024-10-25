@@ -618,7 +618,7 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
     # Bisogna fornire al bot le nuove mail, cioè i nuovi hash
     elif update.message.text[:n] == passwd_update:
         # Aggiungo le hash nuove al file
-        call("python3 SHA.py", shell=True)
+        call("python3 /home/BOT/AISF-PISA-BOT/SHA.py", shell=True)
 
         # Poi devo riavviare il bot
         with open(file_start, "w", encoding="utf-8") as file_off:
