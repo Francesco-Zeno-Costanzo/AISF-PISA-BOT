@@ -1,8 +1,8 @@
 """
 =============================================================================================================
 Codice di supporto per il bot, contiene le risposte casuali e le domande dei quiz.
-ATTENZIONE: La spiegazione dei quiz non deve superare la lunghezza di una riga altrimenti il codice da errore
-e la domanda non viene visualizzata. Il codice è case sensitive quindi rispettare lo stile del quiz
+ATTENZIONE: La spiegazione dei quiz non deve superare la lunghezza di una 164 caratteri altrimenti il codice
+da errore e la domanda non viene visualizzata. Il codice è case sensitive quindi rispettare lo stile del quiz
 =============================================================================================================
 """
 
