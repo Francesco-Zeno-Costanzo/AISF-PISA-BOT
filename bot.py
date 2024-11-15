@@ -398,8 +398,7 @@ async def prenotazioni(update:Update, context:ContextTypes.DEFAULT_TYPE):
         info = f"Di {NP} posti totali ne rimangono {int(NP-NO)} disponibili"
 
     description = f"Vuoi prenotarti eh? Dammi la mail con cui ti sei iscritto ad AISF, grazie. \
-                   \nPer piacere scrivi solo la mail e fai attenzione agli spazi prima e dopo. \
-                   \nSe la sbagli mi indispongo e ti risponderò a caso. \
+                   \n Mi raccomandola scrivila bene che se la sbagli e mi fai perdere tempo a cercarla mi arrabbio. \
                    \n{info}"
 
     chat_id = update.effective_chat.id
@@ -642,7 +641,7 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
     #######################################################################################################
 
     # Gestione vera e propria delle prenotazioni
-    elif SHA(update.message.text.lower()) in mail:
+    elif SHA(update.message.text.split()[0].lower()) in mail:
         # Apro il file per controllare che si possa ancora prenotare
         with open(file_prenot, "r", encoding="utf-8") as file_p:
             All = file_p.read().split()

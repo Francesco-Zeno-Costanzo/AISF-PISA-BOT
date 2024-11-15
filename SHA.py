@@ -21,5 +21,6 @@ file_mail   = absolut_Path + "mail.txt"
 # Calcolo sha256 e salvo sul file
 with open(file_mail, "w") as f:
     for m in mail:
-        m_sha = hashlib.sha256(m.encode('utf-8')).hexdigest()
+        ms = m.split()[0].lower()
+        m_sha = hashlib.sha256(ms.encode('utf-8')).hexdigest()
         f.write(m_sha + "\n")
