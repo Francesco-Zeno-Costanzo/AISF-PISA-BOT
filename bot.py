@@ -86,12 +86,15 @@ import random
 import numpy as np
 import pandas as pd
 import wikipediaapi
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, Poll
 from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes, ConversationHandler, MessageHandler, filters
 
 # nostri codici
 import secret
 from talk import L, QUIZ, MSG_QUIZ
+from chat import chatbot_response 
 
 
 # Per verificare tutto vada bene
@@ -156,7 +159,10 @@ async def start(update:Update, context:ContextTypes.DEFAULT_TYPE):
     description = "Ciao sono Pluto il bot del comitato locale AISF di PISA. \
     \nMi chiamo Pluto per il semplice fatto che il Generale ha iniziato a scrivermi subito dopo aver visto l'anime Pluto (consigliatissimo a proposito). \
     \nSe lo conoscete saprete che quello in foto non è Pluto, ma è molto figo come personaggio però non mi piaceva il nome, quindi è stata fatta una crasi. \
-    \nAttualmente il mio scopo è darvi informazioni sul comitato e sugli eventi. Posso anche rispondervi a caso o farvi delle domande di cultura generale. \
+    \nAttualmente il mio scopo è darvi informazioni sul comitato e sugli eventi. Posso però anche conversare con voi o farvi delle domande di cultura generale. \
+    \nPer quanto riguarda la conversazione io sono un chatbot molto semplice e sappiate che le conversazioni che avremo saranno salvate e poi controllate.\
+    \nQuesto permetterà al mio dtaset di training di ingrandirsi e migliorare. Quindi non mandate dati sensibili, mi raccomando. \
+    \nPer quanto riguarda le mail invece quelle sono già gestite dovendole voi usare per prenotarvi e nessuno ve le toccherà.\
     \n \
     \nPer il resto ricordatevi di santificare le feste."
     chat_id = update.effective_chat.id
@@ -398,7 +404,10 @@ async def prenotazioni(update:Update, context:ContextTypes.DEFAULT_TYPE):
         info = f"Di {NP} posti totali ne rimangono {int(NP-NO)} disponibili"
 
     description = f"Vuoi prenotarti eh? Dammi la mail con cui ti sei iscritto ad AISF, grazie. \
-                   \n Mi raccomandola scrivila bene che se la sbagli e mi fai perdere tempo a cercarla mi arrabbio. \
+                   \nMi raccomandola scrivila bene che se la sbagli e mi fai perdere tempo a cercarla mi arrabbio. \
+                   \nSe invece vuoi cancellare la prenotazione basta che mi invi un messaggio nella seguente forma: \
+                   \ncodice_di_prenotazione cancella \
+                   \n(e.g. @000 cancella) \
                    \n{info}"
 
     chat_id = update.effective_chat.id
@@ -689,34 +698,63 @@ async def echo(update:Update, context:ContextTypes.DEFAULT_TYPE):
 
     #######################################################################################################
 
-    # Se il messaggio è lungo 4 potrebbe essere un codice di prenotazione
-    elif len(update.message.text) == 4:
+    # Se il messaggio è del tipo: "<qualsiasi_carattere><numero>" oppure
+    # "<qualsiasi_carattere><numero> cancella" si fa il check per prenotazioni o per cancellarle
+    elif  bool(re.match(r"^.?\d+( cancella)?$", update.message.text)) :
         
         chat_id = update.effective_chat.id
         # leggo tutti i codici
         with open(file_prenot, "r", encoding="utf-8") as file_p:
             All = file_p.read().split()
         
-        # Se è dentro tutto bene
-        if update.message.text in All:
-            description = "Il codice corrisponde c'è una prenotazione"
-            await context.bot.send_message(chat_id=chat_id, text=description)
+        # Se il messaggio è lungo solo 4 allora si tratta solo del codice
+        if len(update.message.text) == 4:
+            # Se è dentro tutto bene
+            if update.message.text in All:
+                description = "Il codice corrisponde c'è una prenotazione"
+                await context.bot.send_message(chat_id=chat_id, text=description)
+            
+            # Se il primo carattere corrisponde ma il resto no
+            elif not update.message.text in All and not update.message.text.isalpha():
+                description = "Non trovo una corrispondenza, attento in caso a scrivere bene il codice"
+                await context.bot.send_message(chat_id=chat_id, text=description)
         
-        # Se il primo carattere corrisponde ma il resto no
-        elif not update.message.text in All and not update.message.text.isalpha():
-            description = "Non trovo una corrispondenza, attento in caso a scrivere bene il codice"
-            await context.bot.send_message(chat_id=chat_id, text=description)
-        
-        # In caso non fosse un codice di prenotazione
+        # potrebbe essere più lungo e si potrebbe voler cancellare la prenotazione
         else :
-            # rispondo a caso
-            await update.message.reply_text(L[random.randint(0, len(L)-1)])
+            try:
+                code = update.message.text[:4]
+                idx  = All.index(code)          # Trova l'indice del codice di prenotazione
+                
+                All.pop(idx)                    # Rimuove il codice
+                All.pop(idx)                    # Ora l'id ha l'indice che aveva prima il codice
+                                                # e quindi analogamente togliamo anche lui
+                
+                description = "Prenotazione cancellata correttamente"
+                await context.bot.send_message(chat_id=chat_id, text=description)
+
+            except ValueError:
+                description = f"il codice {code} non è stato trovato nella lista."
+                await context.bot.send_message(chat_id=chat_id, text=description)
+
+            # Scrivi su file il contenuto della lista aggiornata
+            with open(file_prenot, "w") as file_p:
+                for el in All:
+                    file_p.write(el + "\n")
 
     #######################################################################################################
 
     else:
-        # altrimenti rispondo a caso
-        await update.message.reply_text(L[random.randint(0, len(L)-1)])
+        pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+        if re.match(pattern, update.message.text):
+            msg = "La tua mail non è nel mio database. \
+                 \nSe ti vuoi prenotare ad un evento contatta il presidente o il responsabile del bot per risolvere il problema. \
+                 \nTrovi i loro nomi usando il comando /info e andando su persone."
+            await update.message.reply_text(msg)
+        
+        else:
+            # altrimenti rispondo a caso chatbot_response
+            #await update.message.reply_text(L[random.randint(0, len(L)-1)])
+            await update.message.reply_text(chatbot_response(update.message.text))
 
 #==================================================================================================
 # Main del bot

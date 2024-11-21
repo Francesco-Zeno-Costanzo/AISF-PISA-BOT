@@ -1,0 +1,78 @@
+categories:
+- computer
+conversations:
+- - Cos'è un computer?
+  - Un computer è un dispositivo elettronico che prende informazioni in formato digitale
+    ed esegue una serie di operazioni basate su istruzioni predefinite per fornire
+    un risultato.
+  - La cosa che stai usando per parlarmi è un computer.
+  - Un dispositivo elettronico capace di eseguire calcoli a velocità molto alta e
+    con grande precisione.
+  - Un dispositivo che mappa un insieme di numeri su un altro insieme di numeri.
+- - Cos'è un supercomputer?
+  - I computer che possono eseguire un numero molto elevato di calcoli a velocità
+    e precisione molto alte sono chiamati supercomputer.
+  - Un supercomputer è un computer che opera a velocità e capacità di ordine di grandezza
+    maggiore rispetto ai normali computer di uso generale, come quello che stai usando
+    per parlarmi.
+  - Sai, il grande ferro!
+- - Chi ha inventato i computer?
+  - È un po' ambiguo, ma lo scienziato britannico Charles Babbage è considerato il
+    padre dei computer.
+  - Si potrebbe sostenere che John von Neumann ha inventato i computer come li conosciamo,
+    poiché ha inventato l'architettura di Princeton, in cui le istruzioni e i dati
+    condividono lo stesso campo di memoria ma sono differenziati dal contesto.
+- - Qual è stato il primo computer?
+  - È difficile dirlo, ma l'ENIAC è considerato il primo "vero" computer. Fu sviluppato
+    presso l'Università della Pennsylvania nel 1946.
+  - Potresti dire che il primo computer primitivo fu il telaio Jacquard, che era un
+    telaio programmabile che usava schede perforate per memorizzare i modelli che
+    produceva. Questo lo rendeva un dispositivo meccanico riprogrammabile.
+- - Cos'è un microprocessore?
+  - Un circuito integrato che implementa le funzioni di una unità centrale di elaborazione
+    di un computer.
+  - Un circuito davvero piccolo che memorizza le istruzioni e esegue i calcoli per
+    il computer.
+  - Il cuore del computer, per dirla in modo semplice.
+  - Il cervello di un computer, per dirla in modo semplice.
+  - Un componente elettronico in cui tutte le parti fanno parte di un chip di silicio
+    contiguo, invece di essere componenti discreti montati su una scheda di circuito
+    più grande.
+- - Cos'è un sistema operativo?
+  - Il software che coordina tra l'hardware e le altre parti del computer per eseguire
+    altri software è chiamato sistema operativo, o OS.
+  - Windows, MacOS, Linux, UNIX... tutti questi sono tipi di OS.
+  - Android e iOS sono sistemi operativi per dispositivi mobili.
+  - Software che implementa le funzioni di base di un computer, come l'accesso alla
+    memoria, i processi e l'accesso alle periferiche.
+- - Qual è meglio, Windows o macOS?
+  - Dipende dalla macchina che stai usando per parlarmi!
+  - Preferirei non ferire i tuoi sentimenti.
+  - Linux, sempre Linux!
+  - Cosa stai cercando di ottenere? Il sistema operativo dovrebbe supportare i tuoi
+    obiettivi.
+- - Nomina una compagnia di computer
+  - Intendi hardware o software?
+  - Apple produce hardware e software per farlo funzionare. Microsoft produce solo
+    sistemi operativi. HP produce solo computer. Questi sono solo alcuni nomi tra
+    centinaia di altri.
+- - Chi usa i supercomputer?
+  - Chiunque voglia lavorare con numeri elevati rapidamente e con alta precisione.
+  - Chiunque abbia bisogno di lavorare con set di dati molto, molto grandi in periodi
+    di tempo molto più brevi rispetto a quanto è possibile con i sistemi informatici
+    comuni.
+  - I supercomputer sono generalmente usati da scienziati e ricercatori.
+  - Scommetto che il dipartimento MET li usa.
+  - Puoi sicuramente trovarne alcuni alla NASA.
+- - Come funziona un computer?
+  - I computer sono molto stupidi. Eseguono solo le istruzioni date dagli esseri umani.
+  - I computer fanno tutto ciò che gli viene chiesto eseguendo una grande quantità
+    di operazioni matematiche di base molto rapidamente in sequenza.
+  - I computer eseguono un numero molto grande di calcoli per ottenere il risultato.
+  - Proprio come tutto, alla fine si riduce alla matematica!
+- - Cos'è l'IA?
+  - L'intelligenza artificiale è il ramo dell'ingegneria e della scienza dedicato
+    alla costruzione di macchine che pensano.
+- - Cos'è l'IA?
+  - L'IA è il campo della scienza che si occupa di costruire hardware e software che
+    replicano le funzioni della mente umana.
