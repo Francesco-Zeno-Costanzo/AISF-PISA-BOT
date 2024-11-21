@@ -98,7 +98,7 @@ def load_corpus(dir):
 if __name__ == "__main__":
 
     # Scarica risorse NLTK (esegui solo la prima volta)
-    if 0:
+    if 1:
         nltk.download('punkt_tab')
         nltk.download('punkt')
         nltk.download('wordnet')
