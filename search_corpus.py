@@ -53,7 +53,7 @@ def find(folder_path, search_string):
 if __name__ == "__main__":
 
     folder_path = "corpus"
-    search_string = "settembre"
+    search_string = "cucuzze"
     matches = find(folder_path, search_string)
 
     if matches:
