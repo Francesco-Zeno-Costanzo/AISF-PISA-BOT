@@ -94,7 +94,8 @@ from telegram.ext import Application, CallbackQueryHandler, CommandHandler, Cont
 # nostri codici
 import secret
 from talk import L, QUIZ, MSG_QUIZ
-from chat import chatbot_response 
+from chat import chatbot_response
+from tris_utils import *
 
 
 # Per verificare tutto vada bene
@@ -361,8 +362,12 @@ async def button_c(update:Update, context:ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
 
-    # Messaggio del bot
-    await query.edit_message_text(text="Il materiale è disponibile qui:\n" + df['Link Materiale'][int(query.data)])
+    # Controlla che query.data sia numerica prima di convertirla
+    if query.data.isdigit():
+        index = int(query.data)
+        await query.edit_message_text(text="Il materiale è disponibile qui:\n" + df['Link Materiale'][index])
+    else:
+        await query.edit_message_text(text="Errore: dati non validi.")
 
 #==================================================================================================
 # Quiz 
@@ -508,6 +513,194 @@ async def eventi_storici(update:Update, context:ContextTypes.DEFAULT_TYPE):
 
         description = f"Ooh... ecco qua: {parsed_data[random.randint(0, len(parsed_data)-1)]}"
         await context.bot.send_message(chat_id=chat_id, text=description)
+
+#==================================================================================================
+# Sezione gioco tris
+#==================================================================================================
+
+async def tris(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    '''
+    Funzione per inizializzare il gioco
+    '''
+
+    # Inizializzazione della griglia
+    context.user_data["grid"] = [
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0]
+    ]
+    # Selezione della difficolta del gioco
+    keyboard = [
+        [InlineKeyboardButton("Facile",    callback_data="difficulty_easy"),
+         InlineKeyboardButton("Difficile", callback_data="difficulty_hard")],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await update.message.reply_text("Seleziona la difficoltà:", reply_markup=reply_markup)
+
+
+async def set_difficulty(update:Update, context):
+    '''
+    Callback per la selezione della difficoltà.
+    Selezionata la diffcoltà invia un nuovo messaggio
+    relativo adesso al simbolo di gioco
+    '''
+    query = update.callback_query
+    await query.answer()
+    
+    # Selezione della difficoltà
+    if query.data == "difficulty_easy":
+        context.user_data["difficulty"] = "easy"
+    else:
+        context.user_data["difficulty"] = "hard"
+
+    # Bottoni per i somboli
+    keyboard = [
+        [InlineKeyboardButton(CROSS,  callback_data="symbol_x"),
+         InlineKeyboardButton(CIRCLE, callback_data="symbol_o")]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await query.edit_message_text("Seleziona il simbolo:", reply_markup=reply_markup)
+
+
+async def set_symbol(update: Update, context):
+    '''
+    Callback per la selezione del simbolo
+    Selezionato il simbolo manda il messaggio
+    per decidere che debba iniziare
+    '''
+    global user_symbol, computer_symbol
+    query = update.callback_query
+    await query.answer()
+
+    # Selezione del simbolo
+    if query.data == "symbol_x":
+        user_symbol     = CROSS
+        computer_symbol = CIRCLE
+    else:
+        user_symbol     = CIRCLE
+        computer_symbol = CROSS
+
+    # Bottoni per chi deve inizare
+    keyboard = [
+        [InlineKeyboardButton("Inizia per primo",   callback_data="start_first"),
+         InlineKeyboardButton("Inizia il computer", callback_data="start_computer")]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await query.edit_message_text("Chi inizia?", reply_markup=reply_markup)
+
+
+async def start_game(update: Update, context):
+    '''
+    Callback per iniziare il gioco
+    Stabilito chi inizia parte il gioco
+    '''
+
+    query = update.callback_query
+    await query.answer()
+
+    if query.data == "start_first":
+        await send_board(query, context)  # Mostra la griglia iniziale se inizia l'utente
+   
+    else:
+        computer_move(context)            # Il computer fa la prima mossa
+        await send_board(query, context)  # Mostra la griglia aggiornata dopo la mossa del computer
+
+
+async def send_board(query, context):
+    '''
+    Funzione per inviare la griglia di gioco
+    e per aggiornarla dopo ogni mossa
+    '''
+    grid = context.user_data["grid"]  # Recupera la griglia
+
+    keyboard = []
+    for i in range(3):
+        row = []
+        for j in range(3):
+            symbol = " "
+            if grid[i][j] == Utente:
+                symbol = user_symbol
+            elif grid[i][j] == Engine:
+                symbol = computer_symbol
+            row.append(InlineKeyboardButton(symbol, callback_data=f"move_{i}_{j}"))
+        keyboard.append(row)
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    # Aggiorna il messaggio con la griglia corrente
+    try:
+        await query.edit_message_text("Ecco la griglia:", reply_markup=reply_markup)
+    except Exception as e:
+        print(f"Errore nell'aggiornamento del messaggio: {e}")
+
+
+async def handle_move(update: Update, context):
+    '''
+    Funzione per gestire le mosse
+    '''
+    query = update.callback_query
+    await query.answer()
+
+    grid = context.user_data["grid"]  # Recupera la griglia
+    _, x, y = query.data.split("_")
+    x, y = int(x), int(y)
+
+    if grid[x][y] != 0:
+        await query.edit_message_text("Mossa non valida!")
+        return
+
+    # Esegui la mossa dell'utente
+    grid[x][y] = Utente
+    context.user_data["grid"] = grid  # Salva la griglia aggiornata
+
+    # Controlla se l'utente ha vinto
+    if vittoria(grid, Utente):
+        await show_final_result(query, context, f"Complimenti, hai vinto! {user_symbol}")
+        return
+
+    # Controlla se c'è un pareggio
+    if len(libero(grid)) == 0:
+        await show_final_result(query, context, "Pareggio!")
+        return
+
+    # Mossa del computer
+    computer_move(context)
+
+    # Controlla se il computer ha vinto
+    if vittoria(grid, Engine):
+        await show_final_result(query, context, f"Mi spiace, hai perso! {computer_symbol}")
+        return
+
+    # Controlla se c'è un pareggio dopo la mossa del computer
+    if len(libero(grid)) == 0:
+        await show_final_result(query, context, "Pareggio!")
+        return
+
+    # Aggiorna la griglia dopo ogni mossa
+    await send_board(query, context)
+
+
+async def show_final_result(query, context, message):
+    """
+    Mostra il messaggio finale e blocca la griglia.
+    La griglia rimane visibile dopo la partita ma
+    non ci si può più interagire
+    """
+    grid = context.user_data["grid"]  # Recupera la griglia
+    keyboard = []
+    for i in range(3):
+        row = []
+        for j in range(3):
+            symbol = " "
+            if grid[i][j] == Utente:
+                symbol = user_symbol
+            elif grid[i][j] == Engine:
+                symbol = computer_symbol
+            row.append(InlineKeyboardButton(symbol, callback_data="none"))
+        keyboard.append(row)
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await query.edit_message_text(message, reply_markup=reply_markup)
 
 #==================================================================================================
 # Risposte a caso a chi manda messaggi
@@ -768,15 +961,14 @@ def main():
     # Creo il bot vero e proprio
     application = Application.builder().token(secret.TOKEN).build()
 
-    # Creo il comando start
-    application.add_handler(CommandHandler("start", start))  
-
-    # Creo il comando info e ora qui è un po' convoluto
-    # I return delle funzioni danno lo stato in cui siamo e ciò ci permette di gestire
-    # la creazione dei sotto bottoni delle rispettivi classi. La sintassi del pattern
-    # l'ho copiata dalla documentazion di python-telegra-bot (il pacchetto usato),
-    # non so di preciso a cosa serva so solo che la stringa in mezzo deve
-    # essere uguale al callback_data usato quando il bottone è stato creato 
+    #=======================================================================================#
+    # Creo il comando info e ora qui è un po' convoluto                                     #
+    # I return delle funzioni danno lo stato in cui siamo e ciò ci permette di gestire      #
+    # la creazione dei sotto bottoni delle rispettivi classi. La sintassi del pattern       #
+    # l'ho copiata dalla documentazion di python-telegram-bot (il pacchetto usato),         # 
+    # non so di preciso a cosa serva so solo che la stringa in mezzo deve                   #
+    # essere uguale al callback_data usato quando il bottone è stato creato                 #
+    #=======================================================================================#
     conv_handler = ConversationHandler(entry_points=[CommandHandler("info", info)],
         states={
             0: [
@@ -797,7 +989,8 @@ def main():
   
     # Creo il comando /corsi
     application.add_handler(CommandHandler("corsi", corsi))
-    application.add_handler(CallbackQueryHandler(button_c))
+    application.add_handler(CallbackQueryHandler(button_c, pattern="^\d+$"))  # Solo numeri interi per i corsi
+
 
     # Creo comando /quiz
     application.add_handler(CommandHandler("quiz", quiz))
@@ -810,6 +1003,22 @@ def main():
 
     # Creo il comando per le ricorrenze storiche
     application.add_handler(CommandHandler("eventi_storici", eventi_storici))
+
+    # Creo il comando per il gioco del tris
+    application.add_handler(CommandHandler("tris", tris))
+    #====================================================================================================#
+    # Quel che succede fondamentalmente è che la funzione tris crea due bottoni (facile o difficle)      #
+    # quando l'utente ne preme uno il callback è gesistito dalla funzione successiva che salva la        #
+    # risposta dell'utente e crea altri due bottoni (simboli di gioco), il cui callback sarà nuovamente  #
+    # gestito dalla funzione successiva, e così via. La soluzione è leggermente diversa rispetto a       #
+    # quella del comando /info ma sta succedendo in realtà la stessa cosa ovvero dei bottoni che         #
+    # si aggiornano man mano che l'utente interagisce                                                    #
+    #====================================================================================================#
+    application.add_handler(CallbackQueryHandler(set_difficulty, pattern="^difficulty_"))
+    application.add_handler(CallbackQueryHandler(set_symbol,     pattern="^symbol_"))
+    application.add_handler(CallbackQueryHandler(start_game,     pattern="^start_"))
+    application.add_handler(CallbackQueryHandler(handle_move,    pattern="^move_"))
+
 
     # Eseguo il bot
     application.run_polling(allowed_updates=Update.ALL_TYPES)
