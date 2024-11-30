@@ -1011,8 +1011,9 @@ def main():
     # quando l'utente ne preme uno il callback è gesistito dalla funzione successiva che salva la        #
     # risposta dell'utente e crea altri due bottoni (simboli di gioco), il cui callback sarà nuovamente  #
     # gestito dalla funzione successiva, e così via. La soluzione è leggermente diversa rispetto a       #
-    # quella del comando /info ma sta succedendo in realtà la stessa cosa ovvero dei bottoni che         #
-    # si aggiornano man mano che l'utente interagisce                                                    #
+    # quella del comando /info ma sta succedendo moralmente la stessa cosa ovvero dei bottoni che        #
+    # si aggiornano man mano che l'utente interagisce. Il problema è quì invece la gestione della        #
+    # della griglia, che eesndo il terreno di gioco necessita di persistenza e callback dinamico.        #
     #====================================================================================================#
     application.add_handler(CallbackQueryHandler(set_difficulty, pattern="^difficulty_"))
     application.add_handler(CallbackQueryHandler(set_symbol,     pattern="^symbol_"))
