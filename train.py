@@ -33,5 +33,5 @@ y_train = Data_train["y"]
 pipeline.fit(X_train, y_train)
 
 # Save model
-path = r'/home/francesco/GitHub/AISF-PISA-BOT/mod.sav'
+path = r'/home/BOT/AISF-PISA-BOT/mod.sav'
 joblib.dump(pipeline, path)
