@@ -13,7 +13,7 @@ conversation_file = "corpus/user_corpus.yml"
 # Dictionary for unprocessed reply
 response_map = np.load('corpus/map.npy', allow_pickle='TRUE').item()
 # Load model
-chatbot = joblib.load(r'/home/francesco/GitHub/AISF-PISA-BOT/mod.sav')
+chatbot = joblib.load(r'/home/BOT/AISF-PISA-BOT/mod.sav')
 
 
 def chatbot_response(question):
