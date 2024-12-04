@@ -25,7 +25,7 @@ pipeline = Pipeline([
     ("classifier", SVC(kernel='linear', C=1.0, probability=True)),
 ])
 
-Data_train = np.load('corpus/train_dataset.npz')
+Data_train = np.load('/home/BOT/AISF-PISA-BOT/corpus/train_dataset.npz')
 X_train = Data_train["X"]
 y_train = Data_train["y"]
 

@@ -9,9 +9,9 @@ import numpy as np
 from pre_process import preprocess_text
 
 # Path for saving conversations
-conversation_file = "corpus/user_corpus.yml"
+conversation_file = "/home/BOT/AISF-PISA-BOT/corpus/user_corpus.yml"
 # Dictionary for unprocessed reply
-response_map = np.load('corpus/map.npy', allow_pickle='TRUE').item()
+response_map = np.load('/home/BOT/AISF-PISA-BOT/corpus/map.npy', allow_pickle='TRUE').item()
 # Load model
 chatbot = joblib.load(r'/home/BOT/AISF-PISA-BOT/mod.sav')
 

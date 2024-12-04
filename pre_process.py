@@ -137,6 +137,6 @@ if __name__ == "__main__":
     correspondence = {yp : y  for yp, y in zip(y_train_p, y_train)}
 
     # Save data
-    np.savez('corpus/train_dataset', X=X_train_p, y=y_train_p)
-    np.save('corpus/map', correspondence)
+    np.savez('/home/BOT/AISF-PISA-BOT/corpus/train_dataset', X=X_train_p, y=y_train_p)
+    np.save('/home/BOT/AISF-PISA-BOT/corpus/map', correspondence)
 
