@@ -120,7 +120,7 @@ if __name__ == "__main__":
         print(f"Preprocessed: {preprocessed}")
     
     # Root path of the corpus
-    corpus_dir = "corpus"
+    corpus_dir = "/home/BOT/AISF-PISA-BOT/corpus"
     
     # Load and preprocess all conversations
     dataset = load_corpus(corpus_dir)
